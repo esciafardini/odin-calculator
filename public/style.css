@@ -1,0 +1,164 @@
+html{
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+  height: 100vh;
+  font-family: 'Rubik', sans-serif;
+}
+
+.container{
+  height: 100vh;
+  display: grid;
+  grid-template-rows: 10em 1fr 10em;
+  align-items: center;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+  
+  
+
+
+
+  @keyframes blinker {
+    50% {
+      background-color: rgb(180, 118, 221);
+    }
+  }
+
+
+  .top-bar{
+    color: white;
+  }
+  .bottom-bar{
+    text-align: center;
+    align-self: end;
+    font-size: 1em;
+    padding: 1em;
+    color: black;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+  }
+
+.header {
+    font-size: 2.7em;
+    padding: 1em;
+    color: black;
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+  }
+
+  .skull2{
+    justify-self: end;
+  }
+.screen{
+    width: 100%;
+    font-size: 5rem;
+    border: none;
+    background-color: #c1d8e2;
+    color: #fff;
+    text-align: right;
+    padding-right: 20px;
+    padding-left: 10px; 
+    border: solid 3px black;
+    box-shadow: rgba(50, 50, 93, 0.65) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+
+ .calculator{
+   width: 100%;
+   justify-self: center;
+   width: 300px;
+   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+   background-color: rgba(0, 0, 0, 0.945);
+  }
+
+  .calculator-keys{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, minmax(80px, 1fr));
+    grid-gap: 3px;
+  }
+
+
+  button {
+    background-color: black;
+    height: 100%;
+    border: 1px solid white;
+    -webkit-transition: all .15s ease-in-out;
+    transition: all .15s ease-in-out;
+    color: #00d7c3;
+  }
+  
+
+
+
+.glow-on-hover {
+  border:none;
+  outline: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+}
+
+.glow-on-hover:before {
+  content: '';
+  background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+  position: absolute;
+  top: -2px;
+  left:-2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowing 20s linear infinite;
+  opacity: 0;
+  transition: opacity .3s ease-in-out;
+}
+
+.glow-on-hover:active {
+  color: #000
+}
+
+.glow-on-hover:active:after {
+  background: transparent;
+}
+
+.glow-on-hover:hover:before {
+  opacity: 1;
+}
+
+.glow-on-hover:after {
+  z-index: -1;
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #111;
+  left: 0;
+  top: 0;
+}
+
+@keyframes glowing {
+  0% { background-position: 0 0; }
+  50% { background-position: 400% 0; }
+  100% { background-position: 0 0; }
+}
+
+
