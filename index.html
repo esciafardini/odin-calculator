@@ -15,6 +15,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@300&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="public/reset.css">
   <link rel="stylesheet" href="public/style.css">
 
@@ -31,29 +32,19 @@
 
 
   <div class="calculator">
-    <input type="text" class="screen" disabled />
-    <div class="calculator-keys">
-      <button class="glow-on-hover" type="button" value="">7</button>
-      <button class="glow-on-hover" type="button" value="">8</button>
-      <button class="glow-on-hover" type="button" value="">9</button>
-      <button class="glow-on-hover" type="button" value="">+</button>
-      <button class="glow-on-hover" type="button" value="">4</button>
-      <button class="glow-on-hover" type="button" value="">5</button>
-      <button class="glow-on-hover" type="button" value="">6</button>
-      <button class="glow-on-hover" type="button" value="">-</button>
-      <button class="glow-on-hover" type="button" value="">1</button>
-      <button class="glow-on-hover" type="button" value="">2</button>
-      <button class="glow-on-hover" type="button" value="">3</button>
-      <button class="glow-on-hover" type="button" value="">x</button>
-      <button class="glow-on-hover" type="button" value="">C</button>
-      <button class="glow-on-hover" type="button" value="">0</button>
-      <button class="glow-on-hover" type="button" value="">=</button>
-      <button class="glow-on-hover" type="button" value="">/</button>
+
+    <!-- <input type="text" class="screen" disabled /> -->
+    <div class="screen">
+      <div class="number">0</div>
+      <div class="operator"></div>
+    </div>
+
+    <div class="calculator-keys" id="keys">
     </div>
   </div>
 
   <div class="bottom-bar">
-    Clojurescript Implementation
+    Made with clojurescript
   </div>
 
 
