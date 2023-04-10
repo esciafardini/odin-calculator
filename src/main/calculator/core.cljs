@@ -11,15 +11,15 @@
 
 (def button-types ["7" "8" "9" "+" "4" "5" "6" "-" "1" "2" "3" "x" "C" "0" "=" "/"])
 
-(defn could-it-be []
+(defn create-calculator-keys []
   (let [keys-container (dom/getElement "keys")]
     (doall (for [button-type button-types
                  :let [new-div (dom/createElement "button")]]
              (do
-               (dom/classlist.add new-div "glow-on-hover")
-               (set! (.. new-div -id) button-type)
-               (set! (.. new-div -textContent) button-type)
+               (dom/setProperties new-div #js {:class "glow-on-hover"
+                                               :id button-type
+                                               :textContent button-type})
                (dom/appendChild keys-container new-div))))))
 
 (defn init []
-  (could-it-be))
+  (create-calculator-keys))
