@@ -3,7 +3,7 @@
             [goog.events :as events]))
 
 (def total (atom 0))
-(def user-input (atom 0))
+(def temp-storage (atom 0))
 (def operator (atom nil))
 (def last-clicked (atom nil))
 
@@ -35,68 +35,62 @@
       display-number
       (str (f (int total) (int display-number))))))
 
-(defn operator-fx
-  "Maybe attempt to move repeating code blocks to this fn"
-  [total-val u-input-val op-val set-u-input clk-btn type-of num-disp op-disp]
-  (reset! total (apply-old-operation total-val u-input-val op-val))
-  (reset! user-input set-u-input) ;no-op
-  (reset! operator clk-btn)
-  (reset! last-clicked type-of)
-  (dom/setProperties num-disp #js {:textContent @total})
-  (dom/setProperties op-disp #js {:textContent @operator}))
-
 (defn create-calculator-keys! []
   (let [keys-container (dom/getElement "keys")
         number-display (dom/getElement "number-display")
         operator-display (dom/getElement "operator-display")]
-    (doall (for [clicked-btn button-types
-                 :let [new-div (dom/createElement "button")]]
-             (do
-               (dom/setProperties new-div #js {:class "glow-on-hover"
-                                               :id clicked-btn
-                                               :textContent clicked-btn})
-               (cond
-                 (contains? numbers clicked-btn)
-                 (events/listen new-div "click"
-                                (fn [_]
-                                  (if (= @last-clicked :operator)
-                                    (reset! user-input clicked-btn)
-                                    (reset! user-input (append-number-to-display-number @user-input clicked-btn)))
-                                  (reset! last-clicked :number)
-                                  (dom/setProperties number-display #js {:textContent @user-input})))
-                 (contains? operators clicked-btn)
-                 (events/listen new-div "click"
-                                (fn []
-                                  (reset! total (apply-old-operation @total @user-input @operator))
-                                  (reset! user-input @user-input) ;no-op
-                                  (reset! operator clicked-btn)
-                                  (reset! last-clicked :operator)
-                                  (dom/setProperties number-display #js {:textContent @total})
-                                  (dom/setProperties operator-display #js {:textContent @operator})))
+    (mapv (fn [clicked-btn]
+            (let [new-div (dom/createElement "button")]
+              ;add class & attrs to each button
+              (dom/setProperties new-div #js {:class "glow-on-hover"
+                                              :id clicked-btn
+                                              :textContent clicked-btn})
+              ;add the side-fx to each button based on type
+              (cond
+                (contains? numbers clicked-btn)
+                (events/listen new-div "click"
+                               (fn [_]
+                                 (if (= @last-clicked :operator)
+                                   (reset! temp-storage clicked-btn) ;set temp storage to new number
+                                   (reset! temp-storage (append-number-to-display-number @temp-storage clicked-btn)))
+                                 (reset! last-clicked :number)
+                                 (dom/setProperties number-display #js {:textContent @temp-storage})))
 
-                 (= clicked-btn "=")
-                 (events/listen new-div "click"
-                                (fn []
-                                  (reset! total (apply-old-operation @total @user-input @operator))
-                                  (reset! user-input @total)
-                                  (reset! operator nil)
-                                  (reset! last-clicked nil)
-                                  (dom/setProperties number-display #js {:textContent @total})
-                                  (dom/setProperties operator-display #js {:textContent @operator})))
+                (contains? operators clicked-btn)
+                (events/listen new-div "click"
+                               (fn []
+                                 (if (= @last-clicked :operator)
+                                   (do (reset! operator clicked-btn)
+                                       (dom/setProperties operator-display #js {:textContent @operator}))
+                                   (do (reset! total (apply-old-operation @total @temp-storage @operator))
+                                       (reset! temp-storage @temp-storage) ;no-op
+                                       (reset! operator clicked-btn)
+                                       (reset! last-clicked :operator)
+                                       (dom/setProperties number-display #js {:textContent @total})
+                                       (dom/setProperties operator-display #js {:textContent @operator})))))
 
-                 (= clicked-btn "C")
-                 (events/listen new-div "click"
-                                (fn []
-                                  (reset! total (apply-old-operation @total @user-input "C"))
-                                  (reset! user-input 0)
-                                  (reset! operator nil)
-                                  (reset! last-clicked nil)
-                                  (dom/setProperties number-display #js {:textContent @total})
-                                  (dom/setProperties operator-display #js {:textContent @operator})))
+                (= clicked-btn "=")
+                (events/listen new-div "click"
+                               (fn []
+                                 (reset! total (apply-old-operation @total @temp-storage @operator))
+                                 (reset! temp-storage @total)
+                                 (reset! operator nil)
+                                 (reset! last-clicked :operator)
+                                 (dom/setProperties number-display #js {:textContent @total})
+                                 (dom/setProperties operator-display #js {:textContent @operator})))
 
-                 :else (constantly nil))
+                (= clicked-btn "C")
+                (events/listen new-div "click"
+                               (fn []
+                                 (reset! total (apply-old-operation @total @temp-storage "C"))
+                                 (reset! temp-storage 0)
+                                 (reset! operator nil)
+                                 (reset! last-clicked nil)
+                                 (dom/setProperties number-display #js {:textContent @total})
+                                 (dom/setProperties operator-display #js {:textContent @operator}))))
 
-               (dom/appendChild keys-container new-div))))))
+              (dom/appendChild keys-container new-div)))
+          button-types)))
 
 (defn init []
   (create-calculator-keys!))
