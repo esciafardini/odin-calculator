@@ -1,6 +1,7 @@
 (ns calculator.core
-  (:require [goog.dom :as dom]
-            [goog.events :as events]))
+  (:require
+   [goog.dom :as dom]
+   [goog.events :as events]))
 
 (def total (atom 0))
 (def temp-storage (atom 0))
@@ -34,9 +35,11 @@
   (let [f (get op->fn previous-operation)]
     (if (nil? f)
       display-number
-      (-> (f (js/parseFloat total) (js/parseFloat display-number))
-          str
-          (subs 0 8)))))
+      (let [v (f (js/parseFloat total) (js/parseFloat display-number))]
+        (cond
+          (> (max v (- v)) 9999999) "OVERFLOW"
+          (> (count (str v)) 8) (subs (str v) 0 8)
+          :else (str v))))))
 
 (def keys-container (dom/getElement "keys"))
 (def number-display (dom/getElement "number-display"))
