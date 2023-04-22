@@ -16,15 +16,16 @@
    "-" (fn [total x] (- total x))
    "x" (fn [total x] (* total x))
    "/" (fn [total x] (/ total x))
-   "C" (fn [_ _] 0)})
+   "C" (constantly 0)})
 
 (defn append-number-to-display-number
   "Clicking a number will append the clicked number to the display number"
   [user-input-number newly-clicked-number]
   (cond
     (> user-input-number 9999999) "OVERFLOW"
-    (and (zero? (int user-input-number)) (zero? (int newly-clicked-number))) "0"
-    (zero? (int user-input-number)) newly-clicked-number
+    (and (zero? (js/parseFloat user-input-number)) (zero? (js/parseFloat newly-clicked-number))) "0"
+    (or (= user-input-number "OVERFLOW")
+        (zero? (js/parseFloat user-input-number))) newly-clicked-number
     :else (str user-input-number newly-clicked-number)))
 
 (defn apply-old-operation
@@ -33,7 +34,9 @@
   (let [f (get op->fn previous-operation)]
     (if (nil? f)
       display-number
-      (str (f (int total) (int display-number))))))
+      (-> (f (js/parseFloat total) (js/parseFloat display-number))
+          str
+          (subs 0 8)))))
 
 (def keys-container (dom/getElement "keys"))
 (def number-display (dom/getElement "number-display"))
